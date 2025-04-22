@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Brand - Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+</head>
+<body class="font-sans bg-gray-50">
+    <!-- Navigation (same as index.html) -->
+    <nav class="bg-white shadow-lg">
+        <!-- Copy the same nav from index.html -->
+    </nav>
+
+    <!-- Login Section -->
+    <section class="py-16">
+        <div class="container mx-auto px-6">
+            <div class="max-w-md mx-auto bg-white p-8 rounded-lg shadow-md">
+                <div class="text-center mb-8">
+                    <img src="assets/images/logo.png" alt="Logo" class="h-12 w-12 mx-auto mb-4">
+                    <h1 class="text-2xl font-bold text-gray-800">Welcome Back</h1>
+                    <p class="text-gray-600">Sign in to your account to continue</p>
+                </div>
+                
+                <!-- Error Message -->
+                <div id="errorMessage" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 hidden"></div>
+                
+                <form id="loginForm" class="space-y-6">
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                        <input type="email" id="email" name="email" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    </div>
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                        <input type="password" id="password" name="password" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                        <div class="flex justify-end mt-2">
+                            <a href="#" class="text-sm text-blue-500 hover:text-blue-700">Forgot password?</a>
+                        </div>
+                    </div>
+                    <div>
+                        <button type="submit" class="w-full bg-blue-500 text-white font-bold py-3 px-6 rounded-md hover:bg-blue-600 transition duration-300 flex justify-center items-center">
+                            <span id="loginText">Sign In</span>
+                            <span id="loginSpinner" class="hidden ml-2">
+                                <i class="fas fa-spinner fa-spin"></i>
+                            </span>
+                        </button>
+                    </div>
+                    <div class="flex items-center">
+                        <input type="checkbox" id="remember" name="remember" class="h-4 w-4 text-blue-500 focus:ring-blue-500 border-gray-300 rounded">
+                        <label for="remember" class="ml-2 block text-sm text-gray-700">Remember me</label>
+                    </div>
+                </form>
+                <div class="mt-6">
+                    <div class="relative">
+                        <div class="absolute inset-0 flex items-center">
+                            <div class="w-full border-t border-gray-300"></div>
+                        </div>
+                        <div class="relative flex justify-center text-sm">
+                            <span class="px-2 bg-white text-gray-500">Or continue with</span>
+                        </div>
+                    </div>
+                    <div class="mt-6 grid grid-cols-2 gap-3">
+                        <button id="googleLogin" class="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                            <i class="fab fa-google text-blue-500"></i>
+                            <span class="ml-2">Google</span>
+                        </button>
+                        <button id="facebookLogin" class="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                            <i class="fab fa-facebook-f text-blue-600"></i>
+                            <span class="ml-2">Facebook</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="mt-6 text-center">
+                    <p class="text-sm text-gray-600">
+                        Don't have an account? 
+                        <a href="register.html" class="text-blue-500 hover:text-blue-700">Sign up</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer (same as index.html) -->
+    <footer class="bg-gray-800 text-white py-12">
+        <!-- Footer content -->
+    </footer>
+
+    <!-- Firebase Configuration and Auth Script -->
+    <script src="assets/js/auth.js"></script>
+    
+    <!-- Login Script -->
+    <script>
+        // Firebase login
+        const loginForm = document.getElementById('loginForm');
+        const errorMessage = document.getElementById('errorMessage');
+        const loginText = document.getElementById('loginText');
+        const loginSpinner = document.getElementById('loginSpinner');
+        const googleLogin = document.getElementById('googleLogin');
+        const facebookLogin = document.getElementById('facebookLogin');
+
+        if (loginForm) {
+            loginForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                
+                // Show loading state
+                loginText.classList.add('hidden');
+                loginSpinner.classList.remove('hidden');
+                
+                auth.signInWithEmailAndPassword(email, password)
+                    .then((userCredential) => {
+                        // Redirect to dashboard or previous page
+                        const urlParams = new URLSearchParams(window.location.search);
+                        const redirect = urlParams.get('redirect') || 'dashboard.html';
+                        window.location.href = redirect;
+                    })
+                    .catch((error) => {
+                        errorMessage.textContent = error.message;
+                        errorMessage.classList.remove('hidden');
+                        loginText.classList.remove('hidden');
+                        loginSpinner.classList.add('hidden');
+                    });
+            });
+        }
+
+        // Google login
+        if (googleLogin) {
+            googleLogin.addEventListener('click', () => {
+                const provider = new firebase.auth.GoogleAuthProvider();
+                auth.signInWithPopup(provider)
+                    .then((result) => {
+                        window.location.href = 'dashboard.html';
+                    })
+                    .catch((error) => {
+                        errorMessage.textContent = error.message;
+                        errorMessage.classList.remove('hidden');
+                    });
+            });
+        }
+
+        // Facebook login
+        if (facebookLogin) {
+            facebookLogin.addEventListener('click', () => {
+                const provider = new firebase.auth.FacebookAuthProvider();
+                auth.signInWithPopup(provider)
+                    .then((result) => {
+                        window.location.href = 'dashboard.html';
+                    })
+                    .catch((error) => {
+                        errorMessage.textContent = error.message;
+                        errorMessage.classList.remove('hidden');
+                    });
+            });
+        }
+    </script>
+</body>
+</html>

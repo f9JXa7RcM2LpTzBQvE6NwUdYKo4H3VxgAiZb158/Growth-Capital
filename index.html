@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Brand - Home</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+</head>
+<body class="font-sans bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="flex justify-between">
+                <div class="flex space-x-7">
+                    <!-- Logo -->
+                    <div>
+                        <a href="index.html" class="flex items-center py-4 px-2">
+                            <img src="assets/images/logo.png" alt="Logo" class="h-8 w-8 mr-2">
+                            <span class="font-semibold text-gray-500 text-lg">YourBrand</span>
+                        </a>
+                    </div>
+                    <!-- Primary Nav -->
+                    <div class="hidden md:flex items-center space-x-1">
+                        <a href="index.html" class="py-4 px-2 text-blue-500 border-b-4 border-blue-500 font-semibold">Home</a>
+                        <a href="about.html" class="py-4 px-2 text-gray-500 font-semibold hover:text-blue-500 transition duration-300">About Us</a>
+                        <a href="products.html" class="py-4 px-2 text-gray-500 font-semibold hover:text-blue-500 transition duration-300">Products</a>
+                        <a href="contact.html" class="py-4 px-2 text-gray-500 font-semibold hover:text-blue-500 transition duration-300">Contact Us</a>
+                        <!-- Protected Link Example -->
+                        <a href="dashboard.html" id="dashboardLink" class="py-4 px-2 text-gray-500 font-semibold hover:text-blue-500 transition duration-300 hidden">Dashboard</a>
+                    </div>
+                </div>
+                <!-- Secondary Nav - Dynamic based on auth state -->
+                <div class="hidden md:flex items-center space-x-3" id="authButtons">
+                    <a href="login.html" class="py-2 px-2 font-medium text-gray-500 rounded hover:bg-blue-500 hover:text-white transition duration-300">Log In</a>
+                    <a href="register.html" class="py-2 px-2 font-medium text-white bg-blue-500 rounded hover:bg-blue-600 transition duration-300">Register</a>
+                </div>
+                <!-- User Profile (hidden by default) -->
+                <div class="hidden md:flex items-center" id="userProfile">
+                    <div class="relative">
+                        <button id="userMenuButton" class="flex items-center focus:outline-none">
+                            <img id="userAvatar" src="https://via.placeholder.com/40" alt="User" class="w-8 h-8 rounded-full">
+                            <span class="ml-2 text-gray-700" id="userName">User</span>
+                        </button>
+                        <div id="userDropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
+                            <a href="dashboard.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Dashboard</a>
+                            <a href="#" id="signOutButton" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Sign out</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Mobile menu button -->
+                <div class="md:hidden flex items-center">
+                    <button class="outline-none mobile-menu-button">
+                        <svg class="w-6 h-6 text-gray-500" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
+                            <path d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div class="hidden mobile-menu">
+            <ul class="">
+                <li class="active"><a href="index.html" class="block text-sm px-2 py-4 text-white bg-blue-500 font-semibold">Home</a></li>
+                <li><a href="about.html" class="block text-sm px-2 py-4 hover:bg-blue-500 transition duration-300">About Us</a></li>
+                <li><a href="products.html" class="block text-sm px-2 py-4 hover:bg-blue-500 transition duration-300">Products</a></li>
+                <li><a href="contact.html" class="block text-sm px-2 py-4 hover:bg-blue-500 transition duration-300">Contact Us</a></li>
+                <!-- Protected Link Example -->
+                <li id="mobileDashboardLink" class="hidden"><a href="dashboard.html" class="block text-sm px-2 py-4 hover:bg-blue-500 transition duration-300">Dashboard</a></li>
+                <li class="border-t border-gray-200"><a href="login.html" id="mobileLoginLink" class="block text-sm px-2 py-4 hover:bg-blue-500 transition duration-300">Log In</a></li>
+                <li><a href="register.html" id="mobileRegisterLink" class="block text-sm px-2 py-4 hover:bg-blue-500 transition duration-300">Register</a></li>
+                <li id="mobileSignOutLink" class="hidden border-t border-gray-200"><a href="#" class="block text-sm px-2 py-4 hover:bg-blue-500 transition duration-300">Sign Out</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Rest of your home page content remains the same as before -->
+    <!-- Hero Section, Features, Testimonials, etc. -->
+
+    <!-- Add a section that shows protected content preview -->
+    <section class="py-16 bg-gray-100">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6">Unlock Premium Features</h2>
+            <p class="text-xl mb-8 max-w-2xl mx-auto">Sign up or log in to access advanced tools and personalized content.</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+                <!-- Feature 1 -->
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="text-blue-500 mb-4">
+                        <i class="fas fa-chart-line text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Advanced Analytics</h3>
+                    <p class="text-gray-600 mb-4">Get detailed insights into your usage and performance.</p>
+                    <a href="register.html" class="text-blue-500 font-medium hover:text-blue-700">Sign up to access</a>
+                </div>
+                <!-- Feature 2 -->
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="text-blue-500 mb-4">
+                        <i class="fas fa-cog text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Custom Tools</h3>
+                    <p class="text-gray-600 mb-4">Personalize your experience with powerful tools.</p>
+                    <a href="register.html" class="text-blue-500 font-medium hover:text-blue-700">Sign up to access</a>
+                </div>
+                <!-- Feature 3 -->
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="text-blue-500 mb-4">
+                        <i class="fas fa-download text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Exclusive Downloads</h3>
+                    <p class="text-gray-600 mb-4">Access premium resources and content.</p>
+                    <a href="register.html" class="text-blue-500 font-medium hover:text-blue-700">Sign up to access</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer (same as before) -->
+    <footer class="bg-gray-800 text-white py-12">
+        <!-- Footer content -->
+    </footer>
+
+    <!-- Firebase Configuration and Auth Script -->
+    <script src="assets/js/auth.js"></script>
+    
+    <!-- Main JavaScript -->
+    <script>
+        // Mobile menu toggle
+        const btn = document.querySelector("button.mobile-menu-button");
+        const menu = document.querySelector(".mobile-menu");
+
+        btn.addEventListener("click", () => {
+            menu.classList.toggle("hidden");
+        });
+
+        // User dropdown toggle
+        const userMenuButton = document.getElementById('userMenuButton');
+        const userDropdown = document.getElementById('userDropdown');
+
+        if (userMenuButton && userDropdown) {
+            userMenuButton.addEventListener('click', () => {
+                userDropdown.classList.toggle('hidden');
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!userMenuButton.contains(e.target) {
+                    userDropdown.classList.add('hidden');
+                }
+            });
+        }
+    </script>
+</body>
+</html>
